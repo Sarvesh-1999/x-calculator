@@ -70,6 +70,7 @@ function App() {
     >
       <h1 style={{ fontWeight: "bold" }}>React Calculator</h1>
       <input
+      type="text"
         value={expression}
         readOnly
         style={{ textAlign: "left", fontSize: 16, marginBottom: 10 }}
