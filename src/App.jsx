@@ -31,32 +31,35 @@ function App() {
     }
 
     if (value === "=") {
+      if (expression.trim() === "") {
+        setOutput("Error");
+        return;
+      }
       try {
-        if (!expression || /[+\-*/]$/.test(expression)) {
-          setOutput("Error");
-          return;
+        let result = Function(`'use strict';return (${expression})`)();
+
+        if (/\/0(?![0-9])/.test(expression)) {
+          if (/([^0-9])0\/0([^0-9])?/.test(" " + expression + " ")) {
+            result = NaN;
+          } else {
+            result = Infinity;
+          }
         }
-      
-        let result = Function(`return (${expression})`)();
-        setOutput(result === Infinity || result === -Infinity || isNaN(result) ? "Error" : result.toString());
-      } catch {
+        setOutput(result.toString());
+      } catch (err) {
         setOutput("Error");
       }
       return;
     }
 
-    // Prevent two operators in a row (except allow - at start)
     if ("+-*/".includes(value)) {
-      if (
-        expression === "" && value === "-"
-      ) {
-        setExpression("-");
-        return;
-      }
       if (
         expression === "" ||
         "+-*/".includes(expression[expression.length - 1])
       ) {
+        if (value === "-" && expression === "") {
+          setExpression("-");
+        }
         return;
       }
     }
